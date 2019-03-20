@@ -25,6 +25,7 @@ module.exports={
             jsData = {};
         }
     })
+    console.log(jsData)
     return jsData;
   },
   formatJsData(jsData){
