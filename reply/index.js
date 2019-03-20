@@ -39,9 +39,9 @@ module.exports = () => {
             }
     
             const xmlData = await getUserDataAsync(req);
-    
+            console.log(xmlData)
             const jsData =  parseXMLData(xmlData);
-          
+            console.log(jsData)
             const userData =formatJsData(jsData);
     
             let content = '你在说什么?我想再听听你的声音';
@@ -52,19 +52,19 @@ module.exports = () => {
             } else if (userData.Content.indexOf('3') !== -1) {
                 content = '新的一天,\n 2019.3.20祝我破壳日快乐!';
     
-    
-                let replyMessage = `<xml>
+            }
+            let replyMessage = `<xml>
                 <ToUserName><![CDATA[${userData.FromUserName}]]></ToUserName>
                 <FromUserName><![CDATA[${userData.ToUserName}]]></FromUserName>
                 <CreateTime>${Date.now()}</CreateTime>
                 <MsgType><![CDATA[text]]></MsgType>
                 <Content><![CDATA[${content}]]></Content>
-             </xml>`
+             </xml>`;
+             
                 res.send(replyMessage)
-    
-            } else {
-                res.end('error')
-            }
+            
+        }else {
+            res.end('error')
         }
     }
 }

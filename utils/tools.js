@@ -33,9 +33,8 @@ module.exports={
     for (let key in xml) {
         const value = xml[key];
         userData[key] = value[0];
-        return userData;
+        
     }
-
-    console.log(userData);
+    return userData;
   }
 }
