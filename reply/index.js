@@ -5,10 +5,11 @@ const {
   formatJsData
 } = require("../utils/tools");
 const template = require("./template");
+const handleResponse =require('./handle-response')
 
 module.exports = () => {
   return async (req, res) => {
-    console.log(req.query);
+    // console.log(req.query);
 
     // 微信要求验证开发者服务器的有效性，同样的开发者也得验证消息是否来自于微信服务器
     // 1）将token、timestamp、nonce三个参数进行字典序排序
@@ -42,35 +43,15 @@ module.exports = () => {
         res.end("error");
         return;
       }
-
+      //获取用户发过来的消息
       const xmlData = await getUserDataAsync(req);
-
+      //把xml数据转化为js数据
       const jsData = parseXMLData(xmlData);
-
+      //将数组格式变成对象
       const userData = formatJsData(jsData);
-
-      let options = {
-        toUserName: userData.FromUserName,
-        fromUserName: userData.ToUserName,
-        createTime: Date.now(),
-        type: "text",
-        content: "你在说什么?我想再听听你的声音"
-      };
-
-      if (userData.Content === "1") {
-        options.content = "走过路过,\n 别错过 !";
-      } else if (userData.Content && userData.Content.indexOf("2") !== -1) {
-        options.content = "你在想什么 \n 我在想你~";
-      } else if (userData.Content && userData.Content.indexOf("3") !== -1) {
-        options.content = "又是元气满满的一天~";
-      }
-
-      if (userData.MsgType === "image") {
-        options.mediaId = userData.MediaId;
-        options.type = "image";
-        console.log(options.mediaId);
-      }
-
+      //处理用户消息,返回响应
+      const options = handleResponse(userData);
+      //定义6种回复客户的消息模块
       const replyMessage = template(options);
       // console.log(replyMessage);
       res.send(replyMessage);

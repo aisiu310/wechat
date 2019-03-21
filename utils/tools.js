@@ -1,41 +1,39 @@
-const { parseString } = require('xml2js');
+const { parseString } = require("xml2js");
 
-module.exports={
-  getUserDataAsync (req){
+module.exports = {
+  getUserDataAsync(req) {
     return new Promise((resolve, reject) => {
-        let xmlData = '';
-        req
-            .on('data', data => {
-                xmlData += data.toString();
-                // console.log(data.toString())
-            })
-            .on('end', () => {
-                resolve(xmlData);
-            })
-    })
-
+      let xmlData = "";
+      req
+        .on("data", data => {
+          xmlData += data.toString();
+          // console.log(data.toString())
+        })
+        .on("end", () => {
+          resolve(xmlData);
+        });
+    });
   },
-  parseXMLData (xmlData){
+  parseXMLData(xmlData) {
     let jsData = null;
 
     parseString(xmlData, { trim: true }, (err, result) => {
-        if (!err) {
-            jsData = result;
-        } else {
-            jsData = {};
-        }
-    })
-    console.log(jsData)
+      if (!err) {
+        jsData = result;
+      } else {
+        jsData = {};
+      }
+    });
+    console.log(jsData);
     return jsData;
   },
-  formatJsData(jsData){
+  formatJsData(jsData) {
     const { xml } = jsData;
     let userData = {};
     for (let key in xml) {
-        const value = xml[key];
-        userData[key] = value[0];
-        
+      const value = xml[key];
+      userData[key] = value[0];
     }
     return userData;
   }
-}
+};
